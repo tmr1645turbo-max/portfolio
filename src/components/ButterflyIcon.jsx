@@ -1,0 +1,29 @@
+export function ButterflyIcon({ size = 80, theme = "light" }) {
+  const gradId = `bfly_${theme}_${Math.random().toString(36).slice(2,7)}`;
+  const stops = theme === "dark"
+    ? [
+        { offset: "0%",   color: "#E0C080" },
+        { offset: "55%",  color: "#C49080" },
+        { offset: "100%", color: "#A86878" },
+      ]
+    : [
+        { offset: "0%",   color: "#C9A96E" },
+        { offset: "55%",  color: "#B87A60" },
+        { offset: "100%", color: "#A05868" },
+      ];
+  const h = size * (74.09 / 112.96);
+  const BUTTERFLY_PATH = "M60.3,32.35c6.37-18.17,70.8-55.46,47.26-11.45-4.16,11.03-1.45,21.33-18.58,19.88,31.86,14.48-17.05,57.67-27.61,14.07-2.98-.32-1.33,3.24-1.5,4.48-.47,3.33-2.09,10.68-4.66,4.13-1.39-3.57.24-7.7-2.3-10-9.03,45.69-61.3,1.5-27.64-12.68-17.88,1.27-15.4-11.24-20.18-22.51C-9.73-3.49,13.04-1.96,26.7,6.62c10.83,6.02,19.29,15.22,26.55,25.01,2.27-3.54-4.42-15.84-6.37-18.32-1.56-1.12-4.72-.97-4.6-3.51,8.94-.59,10.32,11.36,13.36,17.32.38.74-.35,1.33,1.47.97.97-3.6,8.11-19.82,12.39-19,3.92.77-3.54,6.17-4.48,7.52-2.18,3.16-6.52,12.24-4.72,15.72Z";
+
+  return (
+    <svg width={size} height={h} viewBox="0 0 112.96 74.09" fill="none">
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="37" x2="112.96" y2="37" gradientUnits="userSpaceOnUse">
+          {stops.map((s, i) => (
+            <stop key={i} offset={s.offset} stopColor={s.color} />
+          ))}
+        </linearGradient>
+      </defs>
+      <path d={BUTTERFLY_PATH} fill={`url(#${gradId})`} />
+    </svg>
+  );
+}
