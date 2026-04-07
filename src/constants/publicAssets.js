@@ -29,7 +29,10 @@ export const publicAssets = {
   howtoLip: `${base}images/howto_lip.jpg`,
   howtoCheek: `${base}images/howto_cheek.jpg`,
   howtoEye: `${base}images/howto_eye.jpg`,
-  productPansFlatLay: `${base}images/Cream_color_pans_flat_lay_68350d4409.jpeg`,
+
+  pricingSingle: `${base}images/Cream_color_pans01.png`,
+  pricingSet4: `${base}images/CHRYSA_palette_4.jpeg`,
+  pricingSet6: `${base}images/CHRYSA_palette_6.jpeg`,
 
   swatch: (colorId) => `${base}images/swatches/${colorId}.jpg`,
   modal: (colorName) =>

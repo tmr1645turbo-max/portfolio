@@ -1,10 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useId, useState, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { ButterflyIcon } from '../components/ButterflyIcon';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY_B64
+  ? atob(import.meta.env.VITE_GEMINI_API_KEY_B64)
+  : null;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 export const Diagnosis = () => {
+  const inputId = useId();
   const [step, setStep] = useState(1);
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -14,17 +19,47 @@ export const Diagnosis = () => {
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-      setResult(null);
-      setError(null);
-      setStep(1);
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
     }
+
+    if (!file.type.startsWith('image/')) {
+      setError('画像ファイルを選択してください。');
+      e.target.value = '';
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError('画像サイズは10MB以下にしてください。');
+      e.target.value = '';
+      return;
+    }
+
+    setImageFile(file);
+    setPreviewUrl((currentUrl) => {
+      if (currentUrl) {
+        URL.revokeObjectURL(currentUrl);
+      }
+      return URL.createObjectURL(file);
+    });
+    setResult(null);
+    setError(null);
+    setStep(1);
   };
 
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   const removeImage = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
     setImageFile(null);
     setPreviewUrl(null);
     setResult(null);
@@ -91,7 +126,7 @@ export const Diagnosis = () => {
       setStep(3);
     } catch (err) {
       console.error(err);
-      setError('解析中にエラーが発生しました。もう一度お試しください。');
+      setError(`解析中にエラーが発生しました: ${err?.message ?? err}`);
       setStep(1);
     } finally {
       setIsLoading(false);
@@ -118,11 +153,11 @@ export const Diagnosis = () => {
     <div id="diagnosis" style={{ background: 'var(--bg)', minHeight: '100vh', paddingBottom: '80px' }}>
       {/* HERO */}
       <section className="fade-up" style={{ background: 'var(--surface)', textAlign: 'center', padding: '60px 20px', paddingTop: '100px' }}>
-        <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '16px' }}>AI DIAGNOSIS</div>
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 300, fontStyle: 'italic', fontSize: '22px', color: 'var(--text)', marginBottom: '16px', lineHeight: 1.5 }}>
+        <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '16px' }}>AI DIAGNOSIS</div>
+        <h1 style={{ fontFamily: 'var(--font-heading)', fontWeight: 300, fontStyle: 'italic', fontSize: '28px', color: 'var(--text)', marginBottom: '16px', lineHeight: 1.5 }}>
           あなたのコスメを見せて。<br/>+αを教えます。
         </h1>
-        <p style={{ fontSize: '12px', color: 'var(--muted)', lineHeight: 1.8 }}>
+        <p style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.9, letterSpacing: '0.07em' }}>
           今持っているコスメの写真を撮るだけ。<br />
           AIが色を解析して、<br />あなただけの+αカラーを提案します。
         </p>
@@ -149,31 +184,93 @@ export const Diagnosis = () => {
         ))}
       </div>
 
-      {step < 3 && (
+      {/* ローディング画面 */}
+      {step === 2 && isLoading && (
+        <section style={{
+          minHeight: '60vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '60px 20px',
+          textAlign: 'center',
+          background: 'var(--bg)',
+        }}>
+          {/* 蝶アイコン: 上下浮遊 */}
+          <motion.div
+            animate={{ y: [0, -18, 0], opacity: [0.65, 1, 0.65] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ marginBottom: '44px' }}
+          >
+            <ButterflyIcon size={80} theme="light" />
+          </motion.div>
+
+          {/* ANALYZING 点滅 */}
+          <motion.div
+            animate={{ opacity: [0.2, 1, 0.2] }}
+            transition={{ duration: 2.0, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              fontSize: '10px',
+              letterSpacing: '0.45em',
+              color: 'var(--gold)',
+              marginBottom: '24px',
+              fontFamily: 'var(--font-display)',
+            }}
+          >
+            ANALYZING
+          </motion.div>
+
+          {/* 説明テキスト */}
+          <div style={{
+            fontSize: '13px',
+            color: 'var(--muted)',
+            letterSpacing: '0.08em',
+            lineHeight: 2.2,
+          }}>
+            あなたのコスメを解析しています。<br />少々お待ちください。
+          </div>
+        </section>
+      )}
+
+      {step < 3 && !isLoading && (
         <section className="fade-up" style={{ maxWidth: '600px', margin: '0 auto', padding: '0 20px' }}>
           {/* UPLOAD ZONE */}
-          <div 
-            onClick={() => !isLoading && fileInputRef.current?.click()}
+          <label
+            htmlFor={inputId}
             style={{
               border: '2px dashed var(--border)', background: 'var(--bg)', height: '180px', borderRadius: '8px', 
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              cursor: isLoading ? 'default' : 'pointer', padding: '32px 20px', textAlign: 'center'
+              cursor: isLoading ? 'default' : 'pointer', padding: '32px 20px', textAlign: 'center',
+              opacity: isLoading ? 0.6 : 1,
             }}
           >
             <div style={{ fontSize: '24px', color: 'var(--gold)', marginBottom: '12px' }}>📷</div>
-            <div style={{ fontSize: '13px', color: 'var(--text)', marginBottom: '4px' }}>タップして写真を選ぶ</div>
-            <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>または手持ちコスメを直接撮影</div>
+            <div style={{ fontSize: '14px', color: 'var(--text)', marginBottom: '4px' }}>タップして写真を選ぶ</div>
+            <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '8px' }}>または手持ちコスメを直接撑影</div>
             <div style={{ fontSize: '9px', color: 'var(--gold)' }}>JPG / PNG 対応</div>
-          </div>
+          </label>
           <input
+            id={inputId}
             type="file"
             accept="image/*"
             ref={fileInputRef}
             onChange={handleFileChange}
-            style={{ display: 'none' }}
+            capture="environment"
+            disabled={isLoading}
+            style={{
+              position: 'absolute',
+              width: '1px',
+              height: '1px',
+              padding: 0,
+              margin: '-1px',
+              overflow: 'hidden',
+              clip: 'rect(0, 0, 0, 0)',
+              whiteSpace: 'nowrap',
+              border: 0,
+            }}
           />
 
-          {error && <div style={{ color: 'red', fontSize: '11px', marginTop: '16px', textAlign: 'center' }}>{error}</div>}
+          {error && <div style={{ color: 'red', fontSize: '13px', marginTop: '16px', textAlign: 'center' }}>{error}</div>}
 
           {/* ITEM LIST */}
           {previewUrl && !isLoading && (
@@ -183,7 +280,7 @@ export const Diagnosis = () => {
               </div>
               <div style={{ flex: 1, padding: '0 12px' }}>
                 <div style={{ fontSize: '10px', color: 'var(--muted)' }}>コスメ画像</div>
-                <div style={{ fontSize: '12px', color: 'var(--text)' }}>色を認識します</div>
+                <div style={{ fontSize: '13px', color: 'var(--text)' }}>色を認識します</div>
               </div>
               <div onClick={removeImage} style={{ fontSize: '16px', color: 'var(--muted)', cursor: 'pointer', padding: '8px' }}>×</div>
             </div>
@@ -193,9 +290,9 @@ export const Diagnosis = () => {
           <div style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', padding: '16px', marginTop: '24px' }}>
             <div style={{ fontSize: '10px', letterSpacing: '0.1em', color: 'var(--gold)', marginBottom: '12px' }}>TIPS — うまく診断するために</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ fontSize: '11px', color: 'var(--text)' }}>✦ 自然光で撮ると色がより正確に</div>
-              <div style={{ fontSize: '11px', color: 'var(--text)' }}>✦ コスメを開いた状態で撮影</div>
-              <div style={{ fontSize: '11px', color: 'var(--text)' }}>✦ 複数のコスメを一緒に撮ってもOK</div>
+              <div style={{ fontSize: '14px', color: 'var(--text)', lineHeight: 1.8 }}>❆ 自然光で撑ると色がより正確に</div>
+              <div style={{ fontSize: '14px', color: 'var(--text)', lineHeight: 1.8 }}>❆ コスメを開いた状態で撑影</div>
+              <div style={{ fontSize: '14px', color: 'var(--text)', lineHeight: 1.8 }}>❆ 複数のコスメを一緒に撑ってもOK</div>
             </div>
           </div>
 
@@ -213,7 +310,7 @@ export const Diagnosis = () => {
             >
               {isLoading ? '解析中...' : '+αを診断する（1件）→'}
             </button>
-            <div style={{ fontSize: '12px', color: '#999' }}>無料 · 登録不要</div>
+            <div style={{ fontSize: '14px', color: '#999' }}>無料· 登録不要</div>
           </div>
         </section>
       )}
@@ -223,8 +320,8 @@ export const Diagnosis = () => {
         <section className="fade-up" style={{ maxWidth: '600px', margin: '0 auto' }}>
           <div style={{ height: '3px', background: 'linear-gradient(to right, #B8892A, #C49090)', width: '100%' }}></div>
           <div style={{ padding: '32px 20px', textAlign: 'center' }}>
-            <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '12px' }}>ANALYSIS COMPLETE</div>
-            <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 300, fontStyle: 'italic', fontSize: '22px', color: 'var(--text)', marginBottom: '32px' }}>
+            <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '12px' }}>ANALYSIS COMPLETE</div>
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 300, fontStyle: 'italic', fontSize: '26px', color: 'var(--text)', marginBottom: '32px' }}>
               あなたの+αが見つかりました。
             </h2>
 
@@ -244,7 +341,7 @@ export const Diagnosis = () => {
 
             {/* Advice */}
             <div style={{ borderLeft: '2px solid var(--gold)', paddingLeft: '12px', textAlign: 'left', marginBottom: '40px' }}>
-              <p style={{ fontSize: '13px', color: 'var(--text)', lineHeight: 1.8 }}>{result.advice}</p>
+              <p style={{ fontSize: '14px', color: 'var(--text)', lineHeight: 1.8, letterSpacing: '0.07em' }}>{result.advice}</p>
             </div>
 
             {/* Proposals */}
@@ -257,7 +354,7 @@ export const Diagnosis = () => {
                       <div style={{ fontSize: '14px', fontFamily: 'var(--font-heading)', color: 'var(--text)' }}>{color.colorName}</div>
                       <div style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.1em' }}>{color.groupName}</div>
                     </div>
-                    <div style={{ fontSize: '11px', color: 'var(--text)', lineHeight: 1.5 }}>{color.hint}</div>
+                    <div style={{ fontSize: '14px', color: 'var(--text)', lineHeight: 1.8 }}>{color.hint}</div>
                   </div>
                 </div>
               ))}
@@ -266,13 +363,13 @@ export const Diagnosis = () => {
             {/* Hint Box */}
             <div style={{ background: 'var(--surface)', padding: '16px', textAlign: 'left', marginBottom: '40px' }}>
               <div style={{ fontSize: '11px', color: 'var(--gold)', marginBottom: '8px' }}>+αの使い方</div>
-              <p style={{ fontSize: '12px', color: 'var(--text)', lineHeight: 1.6 }}>{result.productSuggestion}</p>
+              <p style={{ fontSize: '14px', color: 'var(--text)', lineHeight: 1.9, letterSpacing: '0.07em' }}>{result.productSuggestion}</p>
             </div>
           </div>
 
           {/* Product CTA */}
           <div style={{ background: 'var(--dark)', padding: '40px 20px', textAlign: 'center' }}>
-            <p style={{ fontSize: '12px', color: 'var(--surface)', marginBottom: '24px' }}>単品¥1,200から。まず1色、試してみて。</p>
+            <p style={{ fontSize: '14px', color: 'var(--surface)', marginBottom: '24px', lineHeight: 1.8 }}>単品¥1,200から。まず1色、試してみて。</p>
             
             {result.compatibleColors && result.compatibleColors[0] && (
               <button className="btn-cta" style={{ background: 'var(--gold)', color: 'var(--dark)', height: '52px', width: '100%', border: 'none', marginBottom: '16px' }}>

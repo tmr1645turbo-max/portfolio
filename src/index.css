@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Cormorant+SC:wght@300&family=Noto+Serif+JP:wght@300&display=swap');
+@import "tailwindcss";
 
 :root {
   --bg: #F9F6F2;
@@ -160,16 +160,32 @@ a {
   }
 }
 
-/* 36色: モバイル3列 / デスクトップ6列（指示書） */
+/* 36色カラーグリッド: スマホ2列 / タブレット3列 / PC4列 / 大画面5列 */
 .products-color-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 48px;
 }
 
 @media (min-width: 768px) {
   .products-color-grid {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .products-color-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .products-color-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
   }
 }
 
@@ -194,7 +210,17 @@ a {
   display: block;
 }
 
-/* モーダルアニメーション */
+/* FORMULA 2×2グリッド: モバイル1列 / PC2列固定 */
+.formula-grid {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .formula-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ChrysaProducts 風: カラーモーダル */
 @keyframes productsModalFadeIn {
   from {
     opacity: 0;

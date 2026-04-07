@@ -42,7 +42,7 @@ export const Pricing = () => {
   const crossIcon = <span style={{ color: 'var(--border)' }}>✗</span>;
 
   return (
-    <div id="pricing" style={{ paddingBottom: '80px', background: 'var(--bg)' }}>
+    <div id="pricing" style={{ background: 'var(--bg)' }}>
       {/* ========================================
           HERO
       ======================================== */}
@@ -51,7 +51,7 @@ export const Pricing = () => {
         padding: isMobile ? '60px 20px' : '80px 40px', 
         textAlign: 'center' 
       }}>
-        <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '16px' }}>
+        <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '16px' }}>
           AI DIAGNOSIS PLAN
         </div>
         <h1 style={{ 
@@ -63,7 +63,7 @@ export const Pricing = () => {
         }}>
           あなたの+αを、もっと深く。
         </h1>
-        <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '40px' }}>
+        <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '40px', lineHeight: 1.9, letterSpacing: '0.07em' }}>
           無料から始めて、使い心地を確かめてください。
         </p>
 
@@ -143,7 +143,7 @@ export const Pricing = () => {
               無料で始める
             </button>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '13px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '14px', lineHeight: 1.8 }}>
               <div style={{ color: 'var(--text)' }}>✓ AI診断 月3回</div>
               <div style={{ color: 'var(--text)' }}>✓ コスメ登録 3件</div>
               <div style={{ color: 'var(--border)' }}>— 診断結果保存</div>
@@ -198,7 +198,7 @@ export const Pricing = () => {
               14日間無料で試す
             </button>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '13px', color: 'var(--surface)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '14px', color: 'var(--surface)', lineHeight: 1.8 }}>
               <div>✓ AI診断 無制限</div>
               <div>✓ コスメ登録 無制限</div>
               <div>✓ 診断結果保存</div>
@@ -232,7 +232,7 @@ export const Pricing = () => {
               ギフトを贈る
             </button>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '13px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '14px', lineHeight: 1.8 }}>
               <div style={{ color: 'var(--text)' }}>✓ PRO全機能 3ヶ月</div>
               <div style={{ color: 'var(--text)' }}>✓ ギフトカード</div>
               <div style={{ color: 'var(--text)' }}>✓ 日時指定</div>
@@ -253,19 +253,19 @@ export const Pricing = () => {
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <h2 style={{ 
             fontFamily: 'var(--font-display)', 
-            fontSize: '20px', 
+            fontSize: '24px', 
             color: 'var(--text)', 
             textAlign: 'center',
             marginBottom: '32px',
             letterSpacing: '0.1em'
           }}>
-            プラン比較
+            プラン比較表
           </h2>
           <table style={{ 
             width: '100%', 
             minWidth: '600px',
             borderCollapse: 'collapse', 
-            fontSize: '13px',
+            fontSize: '14px',
             textAlign: 'center'
           }}>
             <thead>
@@ -306,12 +306,12 @@ export const Pricing = () => {
       ======================================== */}
       <section className="fade-up" style={{ 
         background: 'var(--surface)', 
-        padding: isMobile ? '60px 20px' : '60px 40px' 
+        padding: isMobile ? '60px 20px 40px' : '60px 40px 40px' 
       }}>
         <div style={{ maxWidth: '760px', margin: '0 auto' }}>
           <h2 style={{ 
             fontFamily: 'var(--font-display)', 
-            fontSize: '20px', 
+            fontSize: '24px', 
             color: 'var(--text)', 
             textAlign: 'center',
             marginBottom: '32px',
@@ -335,7 +335,7 @@ export const Pricing = () => {
                     alignItems: 'center', 
                     justifyContent: 'space-between' 
                   }}>
-                    <span style={{ fontSize: '13px', color: 'var(--text)' }}>
+                    <span style={{ fontSize: '14px', color: 'var(--text)' }}>
                       {faq.q}
                     </span>
                     <span style={{ fontSize: '18px', color: 'var(--gold)' }}>
@@ -343,7 +343,7 @@ export const Pricing = () => {
                     </span>
                   </div>
                   {isOpen && (
-                    <div style={{ paddingBottom: '24px', fontSize: '13px', color: 'var(--muted)', lineHeight: 1.8 }}>
+                    <div style={{ paddingBottom: '24px', fontSize: '14px', color: 'var(--muted)', lineHeight: 1.8, letterSpacing: '0.07em' }}>
                       {faq.a}
                     </div>
                   )}

@@ -1,6 +1,217 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { ButterflyIcon } from '../components/ButterflyIcon';
 import { publicAssets } from '../constants/publicAssets';
+
+function DiagnosisTeaser({ isMobile, navigateTo }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+  return (
+    <section
+      ref={ref}
+      style={{ background: 'var(--surface)', padding: isMobile ? '60px 24px' : '100px 40px', textAlign: 'center' }}
+    >
+      <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '20px' }}
+        >
+          AI DIAGNOSIS
+        </motion.div>
+        <motion.h2
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 300,
+            fontStyle: 'italic',
+            fontSize: isMobile ? '28px' : '42px',
+            color: 'var(--text)',
+            lineHeight: 1.4,
+            marginBottom: '48px',
+            letterSpacing: '0.02em',
+          }}
+        >
+          あなたのコスメを見せて。<br />AIが+αを教えます。
+        </motion.h2>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', marginBottom: '40px', textAlign: 'left' }}>
+          {[
+            { step: '01', text: '手持ちコスメの写真を撮る' },
+            { step: '02', text: 'AIが色を解析' },
+            { step: '03', text: '+αカラーを提案してもらう' },
+          ].map((s, i) => (
+            <motion.div
+              key={s.step}
+              initial={{ opacity: 0, x: -20 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.3 + i * 0.12, ease: 'easeOut' }}
+              style={{
+                background: 'var(--bg)',
+                borderTop: '0.5px solid var(--border)',
+                padding: '18px 20px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '20px',
+              }}
+            >
+              <div style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: isMobile ? '18px' : '22px',
+                color: 'var(--gold)',
+                fontWeight: 300,
+                flexShrink: 0,
+                letterSpacing: '0.05em',
+                minWidth: '36px',
+              }}>
+                {s.step}
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--text)', letterSpacing: '0.05em' }}>
+                {s.text}
+              </div>
+            </motion.div>
+          ))}
+          <div style={{ borderBottom: '0.5px solid var(--border)' }} />
+        </div>
+
+        <motion.button
+          className="btn-cta"
+          onClick={() => navigateTo('diagnosis')}
+          initial={{ opacity: 0, y: 12 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.7, ease: 'easeOut' }}
+          whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+          whileTap={{ scale: 0.97 }}
+          style={{
+            background: 'var(--text)',
+            color: 'var(--gold)',
+            height: '52px',
+            width: isMobile ? '100%' : '320px',
+            border: 'none',
+            fontSize: '12px',
+            letterSpacing: '0.15em',
+            cursor: 'pointer',
+            margin: '0 auto',
+          }}
+        >
+          今すぐ診断する（無料）→
+        </motion.button>
+      </div>
+    </section>
+  );
+}
+
+function ConceptSection({ isMobile }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+  return (
+    <section
+      ref={ref}
+      style={{ background: 'var(--bg)', padding: isMobile ? '80px 24px' : '120px 40px', textAlign: 'center' }}
+    >
+      <div style={{ maxWidth: '640px', margin: '0 auto' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '20px' }}
+        >
+          CONCEPT
+        </motion.div>
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.1, ease: 'easeOut' }}
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontWeight: 300,
+            fontSize: isMobile ? '32px' : '52px',
+            color: 'var(--text)',
+            lineHeight: 1.4,
+            marginBottom: '56px',
+            letterSpacing: '0.02em',
+          }}
+        >
+          いつものメイクにひとつ、<br />新しい色を添えてみる。
+        </motion.h2>
+
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: isMobile ? '12px' : '20px',
+          margin: '0 0 36px',
+        }}>
+          {[
+            { label: ['あなたの', 'コスメ'], bg: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--muted)', sym: null },
+            { label: null, sym: '+' },
+            { label: ['CHRYSA', '+α'], bg: 'var(--surface)', border: '1px solid var(--gold)', color: 'var(--gold)', sym: null },
+            { label: null, sym: '=' },
+            { label: ['新しい', '私へ'], bg: 'var(--text)', border: 'none', color: 'var(--gold)', sym: null },
+          ].map((item, i) => {
+            if (item.sym) {
+              return (
+                <motion.div
+                  key={item.sym + i}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={inView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.4, delay: 0.4 + i * 0.15, ease: 'backOut' }}
+                  style={{ color: 'var(--gold)', fontSize: isMobile ? '24px' : '32px', fontWeight: 300, lineHeight: 1 }}
+                >
+                  {item.sym}
+                </motion.div>
+              );
+            }
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.25 + i * 0.15, ease: 'easeOut' }}
+                whileHover={{ y: -4, transition: { duration: 0.25 } }}
+                style={{
+                  width: isMobile ? '80px' : '100px',
+                  height: isMobile ? '80px' : '100px',
+                  background: item.bg,
+                  border: item.border,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: isMobile ? '10px' : '11px',
+                  color: item.color,
+                  lineHeight: 1.7,
+                  letterSpacing: '0.05em',
+                }}
+              >
+                {item.label.map((l, j) => <div key={j}>{l}</div>)}
+              </motion.div>
+            );
+          })}
+        </div>
+
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.9, ease: 'easeOut' }}
+          style={{
+            fontSize: '14px',
+            color: 'var(--muted)',
+            lineHeight: 1.9,
+            maxWidth: '320px',
+            margin: '0 auto',
+          }}
+        >
+          今持っているコスメに、CHRYSAの+αを一つ。<br />
+          それだけで、メイクが変わる。
+        </motion.p>
+      </div>
+    </section>
+  );
+}
 
 export const Top = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -45,10 +256,13 @@ export const Top = () => {
           動画BG + コピーオーバーレイ
       ======================================== */}
       <section style={{
-        height: '100vh',
-        minHeight: '600px',
+        height: isMobile ? '100svh' : '100vh',
+        minHeight: isMobile ? '680px' : '600px',
         position: 'relative',
         overflow: 'hidden',
+        display: 'flex',
+        alignItems: isMobile ? 'flex-end' : 'stretch',
+        padding: isMobile ? '96px 20px 28px' : 0,
       }} className="fade-up">
 
         {/* 背景: 動画 → 失敗時は静止画 → 失敗時は SVG プレースホルダー */}
@@ -106,12 +320,17 @@ export const Top = () => {
         {/* ========== モバイル: コピーオーバーレイ ========== */}
         {isMobile && (
           <div style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
+            position: 'relative',
+            width: '100%',
             zIndex: 2,
-            padding: '0 20px 32px',
+            maxWidth: '420px',
+            margin: '0 auto',
+            background: 'rgba(249,246,242,0.94)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            padding: '24px 20px',
+            border: '1px solid rgba(216,208,196,0.85)',
+            boxShadow: '0 18px 40px rgba(30,26,22,0.08)',
           }}>
             <div style={{
               fontSize: '9px',
@@ -133,29 +352,47 @@ export const Top = () => {
               +αひとつで、<br />今日が変わる。
             </h1>
             <p style={{
-              fontSize: '12px',
+              fontSize: '14px',
               color: 'var(--muted)',
               marginBottom: '24px',
-              lineHeight: 1.7,
+              lineHeight: 1.8,
             }}>
-              いつだって、+αで美しくなれる。
+              魅力をひらく、"アップデート"カラー。
             </p>
-            <button
-              className="btn-cta"
-              onClick={() => navigateTo('diagnosis')}
-              style={{
-                background: 'var(--text)',
-                color: 'var(--gold)',
-                height: '52px',
-                width: '100%',
-                border: 'none',
-                fontSize: '12px',
-                letterSpacing: '0.15em',
-                cursor: 'pointer',
-              }}
-            >
-              あなたの+αを診断する →
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button
+                className="btn-cta"
+                onClick={() => navigateTo('diagnosis')}
+                style={{
+                  background: 'var(--text)',
+                  color: 'var(--gold)',
+                  height: '52px',
+                  width: '100%',
+                  border: 'none',
+                  fontSize: '12px',
+                  letterSpacing: '0.15em',
+                  cursor: 'pointer',
+                }}
+              >
+                あなたの+αを診断する →
+              </button>
+              <button
+                className="btn-cta"
+                onClick={() => navigateTo('products')}
+                style={{
+                  background: 'transparent',
+                  color: 'var(--text)',
+                  height: '48px',
+                  width: '100%',
+                  border: '1px solid var(--text)',
+                  fontSize: '12px',
+                  letterSpacing: '0.1em',
+                  cursor: 'pointer',
+                }}
+              >
+                商品を見る
+              </button>
+            </div>
           </div>
         )}
 
@@ -190,12 +427,13 @@ export const Top = () => {
               +αひとつで、<br />今日が変わる。
             </h1>
             <p style={{
-              fontSize: '13px',
+              fontSize: '14px',
               color: 'var(--muted)',
               marginBottom: '28px',
               lineHeight: 1.8,
+              letterSpacing: '0.07em',
             }}>
-              いつだって、+αで美しくなれる。
+              魅力をひらく、"アップデート"カラー。
             </p>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button
@@ -238,172 +476,12 @@ export const Top = () => {
       {/* ========================================
           SECTION B: AI診断（主役）
       ======================================== */}
-      <section
-        className="section-padding fade-up"
-        style={{ background: 'var(--surface)' }}
-      >
-        <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '12px' }}>
-          AI DIAGNOSIS
-        </div>
-        <h2 style={{
-          fontFamily: 'var(--font-heading)',
-          fontWeight: 300,
-          fontStyle: 'italic',
-          fontSize: isMobile ? '20px' : '24px',
-          color: 'var(--text)',
-          lineHeight: 1.5,
-          marginBottom: '24px',
-        }}>
-          あなたのコスメを見せて。<br />AIが+αを教えます。
-        </h2>
-
-        {/* ステップリスト */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '24px' }}>
-          {[
-            { step: '1', text: '手持ちコスメの写真を撮る' },
-            { step: '2', text: 'AIが色を解析' },
-            { step: '3', text: '+αカラーを提案してもらう' },
-          ].map((s) => (
-            <div
-              key={s.step}
-              style={{
-                background: 'var(--bg)',
-                border: '0.5px solid var(--border)',
-                height: '56px',
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0 16px',
-                gap: '14px',
-              }}
-            >
-              {/* 丸番号：デザイン指示通り #1E1A16 背景 */}
-              <div style={{
-                width: '24px',
-                height: '24px',
-                borderRadius: '50%',
-                background: 'var(--text)',
-                color: 'var(--gold)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '10px',
-                flexShrink: 0,
-              }}>
-                {s.step}
-              </div>
-              <div style={{ fontSize: '13px', color: 'var(--text)' }}>
-                {s.text}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <button
-          className="btn-cta"
-          onClick={() => navigateTo('diagnosis')}
-          style={{
-            background: 'var(--text)',
-            color: 'var(--gold)',
-            height: '52px',
-            width: '100%',
-            border: 'none',
-            fontSize: '12px',
-            letterSpacing: '0.15em',
-            cursor: 'pointer',
-          }}
-        >
-          今すぐ診断する（無料）→
-        </button>
-      </section>
+      <DiagnosisTeaser isMobile={isMobile} navigateTo={navigateTo} />
 
       {/* ========================================
           SECTION C: +αコンセプト
       ======================================== */}
-      <section
-        className="section-padding fade-up"
-        style={{ background: 'var(--bg)', textAlign: 'center' }}
-      >
-        <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '12px' }}>
-          CONCEPT
-        </div>
-        <h2 style={{
-          fontFamily: 'var(--font-heading)',
-          fontWeight: 300,
-          fontSize: isMobile ? '20px' : '24px',
-          color: 'var(--text)',
-          lineHeight: 1.5,
-          marginBottom: '28px',
-        }}>
-          買い替えなくていい。<br />足すだけでいい。
-        </h2>
-
-        {/* 図解: あなたのコスメ + CHRYSA = 新しい私 */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '10px',
-          margin: '0 0 24px',
-        }}>
-          <div style={{
-            width: '64px',
-            height: '64px',
-            background: 'var(--surface)',
-            border: '0.5px solid var(--border)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '10px',
-            color: 'var(--muted)',
-            lineHeight: 1.5,
-          }}>
-            <div>あなたの</div><div>コスメ</div>
-          </div>
-          <div style={{ color: 'var(--gold)', fontSize: '22px', fontWeight: 300, lineHeight: 1 }}>+</div>
-          <div style={{
-            width: '64px',
-            height: '64px',
-            background: 'var(--surface)',
-            border: '1px solid var(--gold)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '10px',
-            color: 'var(--gold)',
-            lineHeight: 1.5,
-          }}>
-            <div>CHRYSA</div><div>+α</div>
-          </div>
-          <div style={{ color: 'var(--gold)', fontSize: '22px', fontWeight: 300, lineHeight: 1 }}>=</div>
-          <div style={{
-            width: '64px',
-            height: '64px',
-            background: 'var(--text)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '10px',
-            color: 'var(--gold)',
-            lineHeight: 1.5,
-          }}>
-            <div>新しい</div><div>私へ</div>
-          </div>
-        </div>
-
-        <p style={{
-          fontSize: '13px',
-          color: 'var(--muted)',
-          lineHeight: 1.9,
-          maxWidth: '320px',
-          margin: '0 auto',
-        }}>
-          今持っているコスメに、CHRYSAの+αを一つ。<br />
-          それだけで、メイクが変わる。
-        </p>
-      </section>
+      <ConceptSection isMobile={isMobile} />
 
       {/* ========================================
           SECTION A: 商品チラ見せ
@@ -412,13 +490,13 @@ export const Top = () => {
         className="section-padding fade-up"
         style={{ background: 'var(--surface)' }}
       >
-        <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '12px' }}>
+        <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '12px' }}>
           PRODUCTS
         </div>
         <h2 style={{
           fontFamily: 'var(--font-heading)',
           fontWeight: 300,
-          fontSize: isMobile ? '20px' : '24px',
+          fontSize: isMobile ? '24px' : '28px',
           color: 'var(--text)',
           lineHeight: 1.5,
           marginBottom: '28px',
@@ -503,7 +581,7 @@ export const Top = () => {
       >
         <ButterflyIcon size={isMobile ? 48 : 56} theme="dark" />
         <div style={{
-          fontSize: '9px',
+          fontSize: '10px',
           letterSpacing: '0.4em',
           color: 'var(--gold)',
           margin: '20px 0 10px',
@@ -514,7 +592,7 @@ export const Top = () => {
           fontFamily: 'var(--font-heading)',
           fontWeight: 300,
           fontStyle: 'italic',
-          fontSize: isMobile ? '22px' : '28px',
+          fontSize: isMobile ? '26px' : '30px',
           color: 'var(--surface)',
           letterSpacing: '0.08em',
           marginBottom: '16px',
@@ -522,13 +600,14 @@ export const Top = () => {
           さなぎから、蝶へ。
         </h2>
         <p style={{
-          fontSize: '12px',
+          fontSize: '14px',
           color: 'var(--muted)',
           lineHeight: 1.9,
           marginBottom: '32px',
           maxWidth: '280px',
+          letterSpacing: '0.07em',
         }}>
-          今持っているコスメを活かして、<br />より美しい自分へ変容する。
+          惹かれる色は、変わりたいサイン。<br />さあ、新しい羽を広げよう。
         </p>
         <button
           className="btn-cta"

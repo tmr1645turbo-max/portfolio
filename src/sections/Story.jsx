@@ -50,7 +50,7 @@ export const Story = () => {
           justifyContent: 'flex-end',
           paddingBottom: '40px'
         }}>
-          <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '16px' }}>
+          <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '16px' }}>
             BRAND STORY
           </div>
           <h1 style={{
@@ -76,32 +76,33 @@ export const Story = () => {
         alignItems: 'center'
       }}>
         <div style={{ flex: '1 1 50%', padding: isMobile ? '60px 20px' : '80px 60px' }}>
-          <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '24px' }}>
+          <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '24px' }}>
             THE BEGINNING
           </div>
           <h2 style={{
             fontFamily: 'var(--font-heading)',
             fontWeight: 300,
             fontStyle: 'italic',
-            fontSize: '22px',
+            fontSize: '26px',
             color: 'var(--text)',
             lineHeight: 1.6,
             marginBottom: '32px'
           }}>
-            「新しいものを買いなさい」ではなく、<br />
-            「今持っているものを活かす」。
+            誰かになるんじゃない。<br />
+            新しい私を「ひらく」だけ。
           </h2>
           <p style={{
             fontSize: '14px',
             color: 'var(--text)',
             lineHeight: 2,
+            letterSpacing: '0.07em',
             marginBottom: '40px',
             maxWidth: '480px'
           }}>
-            CHRYSAは、コスメを愛しているのに<br />
+            CHRYSA（クリサ）は、コスメを愛しているのに<br />
             使いこなせないと感じる女性のために生まれました。<br />
-            買い替えるのではなく、今あるものに+αを。<br />
-            その小さな一歩が、大きな変容を生む。
+            CHRYSAが届けるのは、あなたの中にすでにある<br />
+            「まだ見ぬ魅力」に光を当てる体験です。
           </p>
           <button
             className="btn-cta"
@@ -139,7 +140,7 @@ export const Story = () => {
         background: 'var(--text)',
         padding: isMobile ? '60px 20px' : '80px 40px'
       }}>
-        <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '40px', textAlign: 'center' }}>
+        <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '40px', textAlign: 'center' }}>
           変容の三段階
         </div>
         <div style={{
@@ -162,14 +163,14 @@ export const Story = () => {
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '18px',
+                fontSize: '20px',
                 color: item.color,
                 marginBottom: '24px',
                 letterSpacing: '0.1em'
               }}>
                 {item.tag}. {item.title}
               </h3>
-              <p style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.8 }}>
+              <p style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.8, letterSpacing: '0.07em' }}>
                 {item.desc}
               </p>
             </div>
@@ -184,13 +185,13 @@ export const Story = () => {
         background: 'var(--surface)',
         padding: isMobile ? '60px 20px' : '80px 40px'
       }}>
-        <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '16px', textAlign: 'center' }}>
+        <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '16px', textAlign: 'center' }}>
           OUR VALUES
         </div>
         <h2 style={{
           fontFamily: 'var(--font-heading)',
           fontWeight: 300,
-          fontSize: '24px',
+          fontSize: '28px',
           color: 'var(--text)',
           marginBottom: '48px',
           textAlign: 'center'
@@ -218,18 +219,18 @@ export const Story = () => {
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center'
+              justifyContent: 'flex-start'
             }}>
               <h3 style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: '14px',
+                fontSize: '16px',
                 letterSpacing: '0.2em',
                 color: 'var(--text)',
                 marginBottom: '16px'
               }}>
                 {val.title}
               </h3>
-              <p style={{ fontSize: '12px', color: 'var(--muted)', lineHeight: 1.6 }}>
+              <p style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.9, letterSpacing: '0.07em' }}>
                 {val.desc}
               </p>
             </div>
@@ -245,7 +246,7 @@ export const Story = () => {
         padding: isMobile ? '60px 20px' : '80px 40px',
         textAlign: 'center'
       }}>
-        <div style={{ fontSize: '9px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '32px' }}>
+        <div style={{ fontSize: '10px', letterSpacing: '0.3em', color: 'var(--gold)', marginBottom: '32px' }}>
           CHRYSA MANIFESTO
         </div>
         <q style={{
@@ -253,7 +254,7 @@ export const Story = () => {
           fontFamily: 'var(--font-heading)',
           fontWeight: 300,
           fontStyle: 'italic',
-          fontSize: isMobile ? '18px' : '22px',
+          fontSize: isMobile ? '20px' : '24px',
           color: 'var(--surface)',
           lineHeight: 1.8,
           maxWidth: '600px',
@@ -279,13 +280,13 @@ export const Story = () => {
         <h2 style={{
           fontFamily: 'var(--font-heading)',
           fontWeight: 300,
-          fontSize: '24px',
+          fontSize: '28px',
           color: 'var(--text)',
           marginBottom: '16px'
         }}>
-          変容をはじめよう。
+          さあ、あなただけのグラデーションで、新しい羽を広げよう。
         </h2>
-        <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '40px' }}>
+        <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '40px', lineHeight: 1.9, letterSpacing: '0.07em' }}>
           あなたの+αは、もうここにある。
         </p>
         <div style={{
