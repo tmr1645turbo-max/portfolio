@@ -1,12 +1,6 @@
 import React, { useEffect, useId, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ButterflyIcon } from '../components/ButterflyIcon';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY_B64
-  ? atob(import.meta.env.VITE_GEMINI_API_KEY_B64)
-  : null;
-const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 export const Diagnosis = () => {
   const inputId = useId();
@@ -30,8 +24,8 @@ export const Diagnosis = () => {
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      setError('画像サイズは10MB以下にしてください。');
+    if (file.size > 3 * 1024 * 1024) {
+      setError('画像サイズは3MB以下にしてください。');
       e.target.value = '';
       return;
     }
@@ -69,10 +63,6 @@ export const Diagnosis = () => {
   };
 
   const handleDiagnosis = async () => {
-    if (!genAI) {
-      setError('Gemini APIキーが設定されていません。環境変数をご確認ください。');
-      return;
-    }
     if (!imageFile) return;
 
     setStep(2);
@@ -80,8 +70,6 @@ export const Diagnosis = () => {
     setError(null);
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
       const reader = new FileReader();
       const base64Promise = new Promise((resolve) => {
         reader.onloadend = () => resolve(reader.result.split(',')[1]);
@@ -89,40 +77,24 @@ export const Diagnosis = () => {
       reader.readAsDataURL(imageFile);
       const base64Data = await base64Promise;
 
-      const prompt = `あなたはプロのメイクアップアーティストです。ユーザーがアップロードした「手持ちのコスメの写真」の色を解析し、それを活かすための「+α」のアドバイスを行ってください。
-コンセプトは「買い替えではなく、手持ちのコスメにCHRYSAの単色クリームカラーなどを足すことで、より美しい自分へ変容する」です。
-必ず以下のJSON形式で回答してください。JSON以外の不要な文章は含めないでください。
-{
-  "analyzedColor": "解析したコスメの主な色合い（例：温かみのあるコーラルピンク）",
-  "analyzedHex": "解析したコスメの主な色のHexコード(例: #FA8072)",
-  "category": "カテゴリ / 色系統 (例: リップ / ピンク系)",
-  "advice": "具体的な使い方とメイクアドバイスを日本語で",
-  "compatibleColors": [
-    {
-      "colorName": "提案する+αカラーの色名 (例: Soft Coral)",
-      "groupName": "グループ名 (例: CORAL)",
-      "hex": "Hexコード (例: #FF9C8A)",
-      "hint": "その色をどう使うかの1行ヒント"
-    }
-  ],
-  "productSuggestion": "CHRYSAのコスメ（単色¥1,200〜）をどのように組み合わせればよいかの具体的な提案（日本語）"
-}`;
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageBase64: base64Data,
+          mimeType: imageFile.type,
+        }),
+      });
 
-      const aiResult = await model.generateContent([
-        prompt,
-        {
-          inlineData: {
-            data: base64Data,
-            mimeType: imageFile.type
-          }
-        }
-      ]);
+      const payload = await response.json().catch(() => null);
 
-      const text = aiResult.response.text();
-      const jsonStr = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      const parsed = JSON.parse(jsonStr);
-      
-      setResult(parsed);
+      if (!response.ok) {
+        throw new Error(payload?.error || '診断APIの呼び出しに失敗しました。');
+      }
+
+      setResult(payload);
       setStep(3);
     } catch (err) {
       console.error(err);
