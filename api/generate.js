@@ -83,7 +83,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Gemini generate API error:', error);
     return res.status(500).json({
-      error: `解析中にエラーが発生しました: ${error?.message ?? error}`,
+      error: error?.message ?? String(error),
     });
   }
 }
